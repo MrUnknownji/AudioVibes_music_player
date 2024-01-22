@@ -15,7 +15,7 @@ const Main = () => {
     <ThemeProvider>
       <PermissionsProvider>
         <MusicProvider>
-          <App />
+            <App />
         </MusicProvider>
       </PermissionsProvider>
     </ThemeProvider>

@@ -96,7 +96,9 @@ const styles = StyleSheet.create({
     zIndex: 1,
     height: 70,
     borderRadius: 50,
+    // position:'fixed',
     justifyContent: 'center',
+    // bottom:40
   },
   bottomBarSubContainer: {
     flexDirection: 'row',

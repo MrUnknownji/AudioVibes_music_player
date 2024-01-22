@@ -1,4 +1,3 @@
-import {StatusBar} from 'react-native';
 import MusicScreen from './Pages/MusicScreen';
 import HomeScreen from './Pages/HomeScreen';
 import {useContext, useEffect} from 'react';
@@ -11,16 +10,11 @@ import {createStackNavigator} from '@react-navigation/stack';
 import {NavigationContainer} from '@react-navigation/native';
 
 const Stack = createStackNavigator();
-StatusBar.setTranslucent(true);
 
 export default function App() {
   const {setup, fetchMusic} = useContext(MusicContext);
   const {activeTrack} = useContext(PermissionsContext);
   const {theme} = useContext(ThemeContext);
-
-  StatusBar.setBarStyle(
-    theme.toLowerCase() === 'dark' ? 'light-content' : 'dark-content',
-  );
 
   useEffect(() => {
     setup();
@@ -33,7 +27,15 @@ export default function App() {
   return (
     <PaperProvider
       theme={theme.toLowerCase() === 'dark' ? MD3DarkTheme : MD3LightTheme}>
-      <NavigationContainer>
+      <NavigationContainer
+        theme={{
+          colors: {
+            background:
+              theme.primary || theme.toLowerCase() === 'dark'
+                ? 'black'
+                : 'white',
+          },
+        }}>
         <Stack.Navigator initialRouteName="Home">
           <Stack.Screen
             name="Home"

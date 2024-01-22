@@ -18,11 +18,9 @@ import SystemNavigationBar from 'react-native-system-navigation-bar';
 import TopBar from '../Components/TopBar';
 import {AnimatePresence, MotiView} from 'moti';
 import {ThemeContext} from '../Contexts/Theme/ThemeContext';
+import {SafeAreaView} from 'react-native';
 
 const SCREEN_HEIGHT = Dimensions.get('screen').height;
-const STATUS_BAR_HEIGHT = StatusBar.currentHeight;
-
-StatusBar.setTranslucent(true);
 
 const HomeScreen = ({navigation}) => {
   const {isPlayerReady} = useContext(MusicContext);
@@ -58,7 +56,6 @@ const HomeScreen = ({navigation}) => {
 
   const settingsButtonHandler = () => {
     panelRef.current.togglePanel();
-    // panelState();
   };
 
   const panelState = () => {
@@ -75,10 +72,14 @@ const HomeScreen = ({navigation}) => {
       setIsGranted(storagePermission);
     }, 1000);
   }, []);
-
+  
   useEffect(() => {
     setNavColors();
+    StatusBar.setBarStyle(
+      theme.toLowerCase() === 'dark' ? 'light-content' : 'dark-content',
+    );
   }, [theme]);
+
   const setNavColors = () => {
     StatusBar.setBackgroundColor(themeColors.elevation.level2);
     SystemNavigationBar.setNavigationColor(
@@ -89,76 +90,72 @@ const HomeScreen = ({navigation}) => {
   };
 
   return (
-    <MotiView
-      style={[styles.screenContainer, {backgroundColor: themeColors.surface}]}
-      from={{opacity: 0}}
-      animate={{opacity: 1}}
-      transition={{type: 'timing', duration: 500}}>
-      <View style={styles.screenSubContainer}>
-        <TopBar settingsButtonHandler={settingsButtonHandler} />
+    <SafeAreaView style={{flex: 1}}>
+      <MotiView
+        style={[styles.screenContainer, {backgroundColor: themeColors.surface}]}
+        from={{opacity: 0}}
+        animate={{opacity: 1}}
+        transition={{type: 'timing', duration: 500}}>
+        <View style={styles.screenSubContainer}>
+          <TopBar settingsButtonHandler={settingsButtonHandler} />
 
-        {isLoading ? (
-          <View style={styles.activityIndicatorContainer}>
-            <ActivityIndicator size={'large'} />
-          </View>
-        ) : storagePermissionGranted === false ? (
-          <Button
-            icon="music"
-            mode="contained"
-            onPress={validStoragePermissionFunction}>
-            Give Permission
-          </Button>
-        ) : (
-          <MusicListContainer navigation={navigation} />
-        )}
-        {!isLoading && isPlayerReady ? (
-          // <View
-          //   style={[
-          //     styles.bottomBarContainer,
-          //     {bottom: panelClosed ? 30 : -100, opacity: panelClosed ? 1 : 0},
-          //   ]}>
-          <AnimatePresence>
-            {panelClosed && (
-              <MotiView
-                style={[
-                  styles.bottomBarContainer,
-                  {
-                    bottom: 30,
-                    opacity: 1,
-                  },
-                ]}
-                animateInitialState={true}
-                exit={{
-                  bottom: -100,
-                  opacity: 0,
-                }}>
-                <BottomBar navigation={navigation} />
-              </MotiView>
-            )}
-          </AnimatePresence>
-        ) : (
-          // </View>
-          ''
-        )}
-        <BottomSheet
-          {...bottomSheetProps}
-          children={<SettingsSheet />}
-          ref={ref => (panelRef.current = ref)}
-          onClose={panelState}
-          onOpen={panelState}
-        />
-      </View>
-    </MotiView>
+          {isLoading ? (
+            <View style={styles.activityIndicatorContainer}>
+              <ActivityIndicator size={'large'} />
+            </View>
+          ) : storagePermissionGranted === false ? (
+            <Button
+              icon="music"
+              mode="contained"
+              onPress={validStoragePermissionFunction}>
+              Give Permission
+            </Button>
+          ) : (
+            <MusicListContainer navigation={navigation} />
+          )}
+          {!isLoading && isPlayerReady ? (
+            <AnimatePresence>
+              {panelClosed && (
+                <MotiView
+                  style={[
+                    styles.bottomBarContainer,
+                    {
+                      bottom: 60,
+                      opacity: 1,
+                    },
+                  ]}
+                  animateInitialState={true}
+                  exit={{
+                    bottom: -80,
+                    opacity: 0,
+                  }}>
+                  <BottomBar navigation={navigation} />
+                </MotiView>
+              )}
+            </AnimatePresence>
+          ) : (
+            ''
+          )}
+          <BottomSheet
+            {...bottomSheetProps}
+            children={<SettingsSheet />}
+            ref={ref => (panelRef.current = ref)}
+            onClose={panelState}
+            onOpen={panelState}
+          />
+        </View>
+      </MotiView>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   screenContainer: {
-    paddingTop: STATUS_BAR_HEIGHT,
     height: SCREEN_HEIGHT,
   },
   screenSubContainer: {alignItems: 'center', height: '100%'},
   bottomBarContainer: {
+    backgroundColor: 'transparent',
     position: 'fixed',
     width: '95%',
   },

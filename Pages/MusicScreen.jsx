@@ -2,8 +2,8 @@ import {
   View,
   ToastAndroid,
   Dimensions,
-  StatusBar,
   StyleSheet,
+  SafeAreaView,
 } from 'react-native';
 import {
   ActivityIndicator,
@@ -26,7 +26,6 @@ import SystemNavigationBar from 'react-native-system-navigation-bar';
 import {MotiImage, MotiView} from 'moti';
 
 const SCREEN_HEIGHT = Dimensions.get('screen').height;
-StatusBar.setTranslucent(true);
 
 const MusicScreen = ({navigation}) => {
   const {isPlayerReady} = useContext(MusicContext);
@@ -51,7 +50,6 @@ const MusicScreen = ({navigation}) => {
   }, []);
   useEffect(() => {
     const unsubscribe = navigation.addListener('transitionStart', () => {
-      StatusBar.setBackgroundColor(themeColors.elevation.level2);
       SystemNavigationBar.navigationHide(true);
     });
     return unsubscribe;
@@ -94,127 +92,131 @@ const MusicScreen = ({navigation}) => {
   return !isPlayerReady ? (
     <ActivityIndicator />
   ) : (
-    <MotiView
-      style={[
-        styles.fullViewStyle,
-        {backgroundColor: themeColors.elevation.level2},
-      ]}
-      from={{opacity: 0}}
-      animate={{opacity: 1}}
-      transition={{type: 'timing', duration: 500}}>
-      <View style={styles.mainViewStyle}>
-        {/* Top Bar Actions View */}
-        <View style={styles.topBarContainer}>
-          <IconButton
-            size={28}
-            icon={'chevron-down'}
-            onPress={() => {
-              navigation.navigate('Home');
-            }}
-          />
-          <View style={styles.topBarButtonsContainer}>
-            <Button
-              {...buttonProps}
-              children={<Icon size={22} name="document-text" />}
+    <SafeAreaView>
+      <MotiView
+        style={[
+          styles.fullViewStyle,
+          {backgroundColor: themeColors.elevation.level2},
+        ]}
+        from={{opacity: 0}}
+        animate={{opacity: 1}}
+        transition={{type: 'timing', duration: 500}}>
+        <View style={styles.mainViewStyle}>
+          {/* Top Bar Actions View */}
+          <View style={styles.topBarContainer}>
+            <IconButton
+              size={28}
+              icon={'chevron-down'}
               onPress={() => {
-                ToastAndroid.show(
-                  'This feature is not supported yet',
-                  ToastAndroid.SHORT,
-                );
+                navigation.navigate('Home');
               }}
             />
-            <Button
-              {...buttonProps}
-              children={
-                <MaterialCommunityIcons size={22} name={shuffleModeIcon} />
-              }
-              onPress={shuffleButtonPressHandler}
-            />
-            <Button
-              {...buttonProps}
-              children={<Icon size={22} name="ellipsis-vertical" />}
-            />
-          </View>
-        </View>
-
-        {/* Album Art Container */}
-        <View style={styles.albumArtContainer}>
-          <MotiImage
-            src={
-              activeTrack.cover
-                ? activeTrack.cover
-                : 'https://lh3.googleusercontent.com/ogw/ANLem4bziuT8nSBxviSGVpilr2o4Nb7jHrTW0qUpDMrGmQ=s64-c-mo'
-            }
-            style={styles.albumArtStyle}
-            from={{opacity: 0.5, scale: 0.7, translateY: -70}}
-            animate={{opacity: 1, scale: 1, translateY: 0}}
-            transition={{type: 'timing', duration: 1000, loop: false}}
-            animateInitialState={true}
-          />
-        </View>
-
-        {/* Song Name and artist Name */}
-        <View style={styles.musicInfoTextContainer}>
-          <Text variant="titleLarge">{activeTrack.title}</Text>
-          <Text variant="bodyMedium">{activeTrack.artist}</Text>
-        </View>
-
-        {/* Seek Bar and time */}
-        <View style={styles.sliderContainer}>
-          <Slider
-            {...sliderProps}
-            onValueChange={value => {
-              TrackPlayer.seekTo(value);
-            }}
-          />
-
-          <View style={styles.timeContainer}>
-            <Text>{formatSeconds(progress.position)}</Text>
-            <Text>{formatDuration(activeTrack.duration)}</Text>
-          </View>
-        </View>
-
-        {/* Music Action buttons */}
-        <View style={styles.musicActionButtonsContainer}>
-          <Button
-            {...buttonProps2}
-            children={<Icon size={23} name="play-back" />}
-            onPress={rewind}
-          />
-          <Button
-            {...buttonProps2}
-            children={<Icon size={23} name="play-skip-back" />}
-            onPress={skipToPrevious}
-          />
-          <Button
-            {...buttonProps2}
-            children={
-              <Icon
-                size={22}
-                name={playbackState.state === State.Playing ? 'square' : 'play'}
+            <View style={styles.topBarButtonsContainer}>
+              <Button
+                {...buttonProps}
+                children={<Icon size={22} name="document-text" />}
+                onPress={() => {
+                  ToastAndroid.show(
+                    'This feature is not supported yet',
+                    ToastAndroid.SHORT,
+                  );
+                }}
               />
-            }
-            onPress={() => togglePlayback(playbackState)}
-          />
-          <Button
-            {...buttonProps2}
-            children={<Icon size={23} name="play-skip-forward" />}
-            onPress={skipToNext}
-          />
-          <Button
-            {...buttonProps2}
-            children={<Icon size={23} name="play-forward" />}
-            onPress={fastForward}
-          />
+              <Button
+                {...buttonProps}
+                children={
+                  <MaterialCommunityIcons size={22} name={shuffleModeIcon} />
+                }
+                onPress={shuffleButtonPressHandler}
+              />
+              <Button
+                {...buttonProps}
+                children={<Icon size={22} name="ellipsis-vertical" />}
+              />
+            </View>
+          </View>
+
+          {/* Album Art Container */}
+          <View style={styles.albumArtContainer}>
+            <MotiImage
+              src={
+                activeTrack.cover
+                  ? activeTrack.cover
+                  : 'https://lh3.googleusercontent.com/ogw/ANLem4bziuT8nSBxviSGVpilr2o4Nb7jHrTW0qUpDMrGmQ=s64-c-mo'
+              }
+              style={styles.albumArtStyle}
+              from={{opacity: 0.5, scale: 0.7, translateY: -70}}
+              animate={{opacity: 1, scale: 1, translateY: 0}}
+              transition={{type: 'timing', duration: 1000, loop: false}}
+              animateInitialState={true}
+            />
+          </View>
+
+          {/* Song Name and artist Name */}
+          <View style={styles.musicInfoTextContainer}>
+            <Text variant="titleLarge">{activeTrack.title}</Text>
+            <Text variant="bodyMedium">{activeTrack.artist}</Text>
+          </View>
+
+          {/* Seek Bar and time */}
+          <View style={styles.sliderContainer}>
+            <Slider
+              {...sliderProps}
+              onValueChange={value => {
+                TrackPlayer.seekTo(value);
+              }}
+            />
+
+            <View style={styles.timeContainer}>
+              <Text>{formatSeconds(progress.position)}</Text>
+              <Text>{formatDuration(activeTrack.duration)}</Text>
+            </View>
+          </View>
+
+          {/* Music Action buttons */}
+          <View style={styles.musicActionButtonsContainer}>
+            <Button
+              {...buttonProps2}
+              children={<Icon size={23} name="play-back" />}
+              onPress={rewind}
+            />
+            <Button
+              {...buttonProps2}
+              children={<Icon size={23} name="play-skip-back" />}
+              onPress={skipToPrevious}
+            />
+            <Button
+              {...buttonProps2}
+              children={
+                <Icon
+                  size={22}
+                  name={
+                    playbackState.state === State.Playing ? 'square' : 'play'
+                  }
+                />
+              }
+              onPress={() => togglePlayback(playbackState)}
+            />
+            <Button
+              {...buttonProps2}
+              children={<Icon size={23} name="play-skip-forward" />}
+              onPress={skipToNext}
+            />
+            <Button
+              {...buttonProps2}
+              children={<Icon size={23} name="play-forward" />}
+              onPress={fastForward}
+            />
+          </View>
         </View>
-      </View>
-    </MotiView>
+      </MotiView>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   fullViewStyle: {
-    paddingTop: 40,
+    // paddingTop: 40,
     height: SCREEN_HEIGHT,
   },
   mainViewStyle: {

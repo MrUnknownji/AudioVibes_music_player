@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext, useState} from 'react';
 import {
   Image,
   View,
@@ -9,8 +9,8 @@ import {
 import {IconButton, Modal, useTheme} from 'react-native-paper';
 import TrackPlayer from 'react-native-track-player';
 import {ThemeContext} from '../Contexts/Theme/ThemeContext';
-import {MotiView} from 'moti';
 import {MusicContext} from '../Contexts/Music/MusicContext';
+import Animated, {FadeInDown} from 'react-native-reanimated';
 
 const ListItemStyle = ({item, navigation, index}) => {
   const [expanded, setExpanded] = useState(false);
@@ -36,11 +36,12 @@ const ListItemStyle = ({item, navigation, index}) => {
   };
 
   return (
-    <View
+    <Animated.View
       style={[
         styles.touchableViewContainer,
         {backgroundColor: currentThemeStyle.colors.elevation.level2},
-      ]}>
+      ]}
+      entering={FadeInDown.delay(200 * index)}>
       <TouchableNativeFeedback onPress={listItemOnPressHandler}>
         <View style={styles.listContainer}>
           <View style={styles.innerListContainer}>
@@ -84,7 +85,7 @@ const ListItemStyle = ({item, navigation, index}) => {
       ) : (
         ''
       )}
-    </View>
+    </Animated.View>
   );
 };
 
