@@ -1,4 +1,5 @@
 Welcome to AudioVibes Its a simple, lightweight offline music player developed using react native
+<img src="[https://camo.githubusercontent.com/..." data-canonical-src="https://gyazo.com/eb5c5741b6a9a16c692170a41a49c858.png](https://github.com/MrUnknownji/AudioVibes2/assets/95078278/708f276a-d202-4b50-b31d-323d4af41957)" width="200" height="1000" />
 ![ScreenShot1](https://github.com/MrUnknownji/AudioVibes2/assets/95078278/708f276a-d202-4b50-b31d-323d4af41957)
 ![DescHome](https://github.com/MrUnknownji/AudioVibes2/assets/95078278/3068c23a-dfb6-471a-86bf-aa8608f95749)
 ![ScreenShot7](https://github.com/MrUnknownji/AudioVibes2/assets/95078278/5b4e5457-a4a2-4b0f-bfbd-ca1d5365be89)
